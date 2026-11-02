@@ -60,6 +60,16 @@ button{font:inherit;cursor:pointer}
 .visor .img{width:min(92vw,420px);aspect-ratio:1;background:linear-gradient(135deg,var(--petalo),var(--rosa));display:grid;place-items:center;font-size:5rem}
 @keyframes aparece{from{opacity:0}to{opacity:1}}
 
+/* carrusel */
+.carrusel{position:relative;height:min(500px,112vw);perspective:1200px;outline-offset:8px;touch-action:pan-y;user-select:none}
+.sl{position:absolute;left:50%;top:0;width:min(300px,66vw);height:calc(100% - 1rem);background:#fff8f2;padding:.6rem .6rem 3rem;border-radius:4px;box-shadow:0 18px 40px rgba(0,0,0,.55);transition:transform .7s cubic-bezier(.2,.8,.2,1),opacity .7s;cursor:pointer}
+.sl img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;-webkit-user-drag:none}
+.sl p{position:absolute;left:0;right:0;bottom:.5rem;text-align:center;font-family:var(--mano);font-size:1.5rem;color:var(--noche);line-height:1.2;padding:0 .5rem}
+.ctrl{display:flex;justify-content:center;align-items:center;gap:1.2rem;margin-top:1.2rem}
+.ctrl button{width:46px;height:46px;border-radius:50%;border:1px solid var(--petalo);background:var(--noche2);color:var(--petalo);font-size:1.3rem}
+.ctrl button:hover{background:var(--petalo);color:var(--noche)}
+.ctrl span{min-width:5ch;text-align:center;font-variant-numeric:tabular-nums}
+
 /* línea del tiempo */
 .linea{position:relative;padding-left:2rem;border-left:2px solid var(--petalo)}
 .hito{position:relative;margin-bottom:2.6rem}
@@ -124,6 +134,16 @@ const CONFIG = {
     { src: "fotos/3.jpg", pie: "Tú riéndote (mi favorita)" },
     { src: "fotos/4.jpg", pie: "Cualquier lugar contigo" }
   ],
+  carrusel: {                           // se llena solo con fotos/5.jpg, 6.jpg, 7.jpg...
+    carpeta: "fotos",
+    desde: 5,                           // primera foto del carrusel
+    extensiones: ["jpg", "jpeg", "png", "webp", "JPG", "JPEG", "PNG"],
+    segundos: 4.5,                      // tiempo entre fotos
+    pies: {                             // opcional: texto por número de foto
+      // 5: "Ese día en la playa",
+      // 6: "Tu sonrisa"
+    }
+  },
   momentos: [
     { fecha: "Agosto 2023", titulo: "Empezó todo", texto: "Recuerdo ese día que me escribiste en la mañana y nunca imaginé en lo que significaría después" },
     { fecha: "Diciembre 2024",   titulo: "Nuestro primer acto de amor", texto: "Cuando nos unimos por primera vez y nos expresamos amor" },
@@ -191,6 +211,91 @@ function Foto({ f, i, abrir }) {
       <div className="img">{ok ? <img src={f.src} alt={f.pie} loading="lazy" onError={() => setOk(false)} /> : "📷"}</div>
       <p>{f.pie}</p>
     </figure>
+  );
+}
+
+function useFotosCarrusel() {
+  const [lista, setLista] = useState(null);
+  useEffect(() => {
+    let vivo = true;
+    const { carpeta, desde, extensiones, pies } = CONFIG.carrusel;
+    const buscar = (n) => new Promise(res => {
+      let k = 0;
+      const sig = () => {
+        if (k >= extensiones.length) return res(null);
+        const src = carpeta + "/" + n + "." + extensiones[k++];
+        const im = new Image();
+        im.onload = () => res({ src, pie: pies[n] || "" });
+        im.onerror = sig;
+        im.src = src;
+      };
+      sig();
+    });
+    (async () => {
+      const out = [];
+      for (let n = desde; n < desde + 120; n += 8) {
+        const lote = await Promise.all(Array.from({ length: 8 }, (_, k) => buscar(n + k)));
+        const halladas = lote.filter(Boolean);
+        out.push(...halladas);
+        if (!halladas.length) break;
+      }
+      if (vivo) setLista(out);
+    })();
+    return () => { vivo = false; };
+  }, []);
+  return lista;
+}
+
+function Carrusel({ abrir }) {
+  const fotos = useFotosCarrusel();
+  const [i, setI] = useState(0);
+  const [pausa, setPausa] = useState(false);
+  const x0 = useRef(null), movio = useRef(false);
+  const n = fotos ? fotos.length : 0;
+  const ir = (d) => setI(v => (v + d + n) % n);
+
+  useEffect(() => {
+    if (n < 2 || pausa || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const t = setInterval(() => setI(v => (v + 1) % n), CONFIG.carrusel.segundos * 1000);
+    return () => clearInterval(t);
+  }, [n, pausa]);
+
+  if (fotos === null) return <p style={{ textAlign: "center", opacity: .7 }}>Cargando recuerdos…</p>;
+  if (!n) return <p style={{ textAlign: "center", opacity: .7 }}>Agrega fotos desde fotos/{CONFIG.carrusel.desde}.jpg para verlas aquí.</p>;
+
+  const mitad = Math.floor(n / 2);
+  return (
+    <>
+      <div className="carrusel" tabIndex={0} aria-roledescription="carrusel" aria-label="Carrusel de fotos"
+        onKeyDown={e => { if (e.key === "ArrowRight") ir(1); if (e.key === "ArrowLeft") ir(-1); }}
+        onPointerDown={e => { x0.current = e.clientX; movio.current = false; setPausa(true); }}
+        onPointerUp={e => {
+          const dx = e.clientX - x0.current;
+          if (Math.abs(dx) > 40) { movio.current = true; ir(dx < 0 ? 1 : -1); }
+        }}>
+        {fotos.map((f, k) => {
+          const o = ((k - i + n + mitad) % n) - mitad;
+          const a = Math.abs(o);
+          return (
+            <figure key={f.src} className="sl" aria-hidden={o !== 0}
+              style={{
+                transform: `translateX(calc(-50% + ${o * 62}%)) scale(${1 - a * .16}) rotateY(${o * -16}deg)`,
+                zIndex: 20 - a, opacity: a > 2 ? 0 : 1 - a * .28, pointerEvents: a > 2 ? "none" : "auto"
+              }}
+              onClick={() => { if (movio.current) return; o === 0 ? abrir({ ...f, ok: true }) : setI(k); }}>
+              <img src={f.src} alt={f.pie || "Recuerdo"} />
+              {f.pie && <p>{f.pie}</p>}
+            </figure>
+          );
+        })}
+      </div>
+      <div className="ctrl">
+        <button onClick={() => ir(-1)} aria-label="Foto anterior">‹</button>
+        <span>{i + 1} / {n}</span>
+        <button onClick={() => setPausa(!pausa)} aria-label={pausa ? "Reanudar" : "Pausar"}>{pausa ? "▶" : "❚❚"}</button>
+        <button onClick={() => ir(1)} aria-label="Foto siguiente">›</button>
+      </div>
+    </>
   );
 }
 
@@ -289,6 +394,11 @@ function App() {
         <section>
           <h2>Nuestros momentos</h2>
           <div className="fotos">{CONFIG.fotos.map((f, i) => <Foto key={i} f={f} i={i} abrir={setFoto} />)}</div>
+        </section>
+
+        <section>
+          <h2>Más recuerdos</h2>
+          <Carrusel abrir={setFoto} />
         </section>
 
         <section>
