@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feliz cumpleaños Honey Bunny💗</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,600&family=Caveat:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --noche:#1b1030; --noche2:#2a1747; --petalo:#ff9bb3; --vela:#ffd27a; --bruma:#f3e9ff; --rosa:#8a2c5b;
+  --serif:'Fraunces',Georgia,serif; --mano:'Caveat','Comic Sans MS',cursive;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--noche);color:var(--bruma);font-family:var(--serif);font-weight:300;line-height:1.7;overflow-x:hidden}
+h1,h2{font-weight:600;line-height:1.1}
+h2{font-size:clamp(2rem,6vw,3.2rem);text-align:center;margin-bottom:2.5rem;font-style:italic}
+section{padding:5rem 1.25rem;max-width:960px;margin:0 auto;position:relative;z-index:2}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--vela);outline-offset:3px}
+
+/* luciérnagas de fondo */
+.fx{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.fx span{position:absolute;bottom:-10%;animation:sube linear infinite;opacity:0}
+@keyframes sube{0%{transform:translateY(0) translateX(0) rotate(0);opacity:0}10%{opacity:.8}90%{opacity:.6}100%{transform:translateY(-115vh) translateX(40px) rotate(40deg);opacity:0}}
+
+/* intro */
+.intro{position:fixed;inset:0;z-index:50;background:var(--noche);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;text-align:center;padding:2rem;transition:opacity 1s,visibility 1s}
+.intro.fuera{opacity:0;visibility:hidden}
+.intro .sobre{font-size:5rem;animation:late 1.6s ease-in-out infinite}
+@keyframes late{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+.btn{background:var(--vela);color:var(--noche);border:0;border-radius:999px;padding:.9rem 2.2rem;font-weight:600;font-size:1.1rem;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 8px 24px rgba(255,210,122,.35)}
+
+/* hero */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:1.2rem}
+.hero h1{font-size:clamp(3rem,13vw,8rem);font-style:italic;letter-spacing:-.02em}
+.hero h1 .l{display:inline-block;opacity:0;transform:translateY(40px) rotate(6deg);animation:letra .8s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes letra{to{opacity:1;transform:none}}
+.hero p{font-size:clamp(1.1rem,3vw,1.5rem);max-width:30ch;min-height:4.5em}
+.flecha{position:absolute;bottom:2rem;font-size:1.6rem;animation:late 2s infinite}
+
+/* contador */
+.cuenta{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:1rem;text-align:center}
+.cuenta div{border:1px solid rgba(255,155,179,.35);border-radius:18px;padding:1.4rem .5rem}
+.cuenta b{display:block;font-size:clamp(2rem,6vw,3rem);color:var(--petalo);font-variant-numeric:tabular-nums}
+.cuenta small{font-size:.95rem;opacity:.75}
+
+/* fotos */
+.fotos{display:flex;flex-wrap:wrap;justify-content:center;gap:2rem 1.5rem}
+.polaroid{background:#fff8f2;color:var(--noche);padding:.8rem .8rem 1rem;width:min(260px,82vw);border-radius:4px;box-shadow:0 14px 30px rgba(0,0,0,.45);transform:rotate(var(--r));transition:transform .35s,box-shadow .35s;cursor:pointer}
+.polaroid:hover,.polaroid:focus-visible{transform:rotate(0) scale(1.07);box-shadow:0 22px 44px rgba(0,0,0,.6)}
+.polaroid .img{aspect-ratio:1;background:linear-gradient(135deg,var(--petalo),var(--rosa));display:grid;place-items:center;font-size:3rem;overflow:hidden}
+.polaroid img{width:100%;height:100%;object-fit:cover;display:block}
+.polaroid p{font-family:var(--mano);font-size:1.5rem;text-align:center;margin-top:.6rem;line-height:1.2}
+.visor{position:fixed;inset:0;z-index:60;background:rgba(10,5,20,.92);display:grid;place-items:center;padding:1rem;animation:aparece .3s}
+.visor img,.visor .img{max-width:min(92vw,720px);max-height:80vh;border-radius:6px}
+.visor .img{width:min(92vw,420px);aspect-ratio:1;background:linear-gradient(135deg,var(--petalo),var(--rosa));display:grid;place-items:center;font-size:5rem}
+@keyframes aparece{from{opacity:0}to{opacity:1}}
+
+/* línea del tiempo */
+.linea{position:relative;padding-left:2rem;border-left:2px solid var(--petalo)}
+.hito{position:relative;margin-bottom:2.6rem}
+.hito::before{content:"";position:absolute;left:calc(-2rem - 8px);top:.55rem;width:14px;height:14px;border-radius:50%;background:var(--vela);box-shadow:0 0 0 5px rgba(255,210,122,.2)}
+.hito time{font-family:var(--mano);font-size:1.4rem;color:var(--vela)}
+.hito h3{font-size:1.5rem;font-weight:600}
+
+/* razones: tarjetas que se voltean */
+.razones{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.2rem}
+.carta{perspective:900px;height:170px;background:none;border:0;color:inherit}
+.carta .in{position:relative;width:100%;height:100%;transition:transform .7s;transform-style:preserve-3d}
+.carta.on .in{transform:rotateY(180deg)}
+.carta .cara{position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;display:grid;place-items:center;padding:1.2rem;text-align:center}
+.carta .f{background:var(--noche2);border:1px solid rgba(255,155,179,.4);font-size:2.4rem}
+.carta .b{background:var(--petalo);color:var(--noche);transform:rotateY(180deg);font-weight:600;font-size:1.05rem;line-height:1.4}
+
+/* final: la vela */
+.final{text-align:center;min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem}
+.pastel{background:none;border:0;color:inherit;display:flex;flex-direction:column;align-items:center;gap:.4rem}
+.llama{width:26px;height:44px;background:radial-gradient(ellipse at 50% 70%,#fff6c8 0,var(--vela) 45%,#ff8a3c 100%);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:parpadea .15s infinite alternate;box-shadow:0 0 40px 14px rgba(255,210,122,.5);transition:opacity .4s,transform .4s}
+.apagada .llama{opacity:0;transform:scale(.2)}
+@keyframes parpadea{from{transform:scale(1) rotate(-2deg)}to{transform:scale(1.08,.95) rotate(2deg)}}
+.mecha{width:5px;height:56px;background:#f5e6d8;border-radius:3px}
+.torta{width:150px;height:60px;background:var(--petalo);border-radius:12px 12px 6px 6px;position:relative}
+.torta::after{content:"";position:absolute;inset:auto 0 0;height:22px;background:var(--rosa);border-radius:0 0 6px 6px}
+.carta-final{max-width:46ch;font-size:1.25rem;animation:aparece 1.5s both}
+.carta-final h2{margin-bottom:1rem}
+canvas.confeti{position:fixed;inset:0;z-index:70;pointer-events:none}
+
+/* música */
+.musica{position:fixed;right:1rem;bottom:1rem;z-index:55;width:52px;height:52px;border-radius:50%;border:1px solid var(--petalo);background:var(--noche2);color:var(--petalo);font-size:1.4rem}
+.musica.suena{animation:late 1.2s infinite}
+
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.fx{display:none}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js"></script>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useMemo } = React;
+
+/* ================================================================
+   ✏️  EDITA SOLO ESTA PARTE: todo el contenido de la página
+   ================================================================ */
+const CONFIG = {
+  nombre: "Honey Bunny",                       // su nombre o apodo
+  firmaTuNombre: "Patuch",
+  fechaInicio: "2023-08-15T00:00:00",   // desde cuándo están juntos
+  cancion: "musica.mp3",                // archivo junto al index.html
+  frases: [                             // se escriben solas, una tras otra
+    "Ya son 22 añitos del amor de mi vida.",
+    "Y estoy feliz que te encontré."
+  ],
+  fotos: [                              // pon tus fotos en la carpeta /fotos
+    { src: "fotos/1.jpg", pie: "El día que lo supe" },
+    { src: "fotos/2.jpg", pie: "Nuestra primera salida" },
+    { src: "fotos/3.jpg", pie: "Tú riéndote (mi favorita)" },
+    { src: "fotos/4.jpg", pie: "Cualquier lugar contigo" }
+  ],
+  momentos: [
+    { fecha: "Agosto 2023", titulo: "Empezó todo", texto: "Recuerdo ese día que me escribiste en la mañana y nunca imaginé en lo que significaría después" },
+    { fecha: "Diciembre 2024",   titulo: "Nuestro primer acto de amor", texto: "Cuando nos unimos por primera vez y nos expresamos amor" },
+    { fecha: "Año 2025", titulo: "Tuvimos nuestros bajos y altos", texto: "Pero al final nuestro amor fue lo más importante." },
+    { fecha: "Hoy",          titulo: "Y seguimos", texto: "Confiando que todo lo que vendrá será aún mejor día a día" }
+
+  ],
+  razones: [
+    "Me haces ser mejor cada día",
+    "Eres mi alegría en mis días malos",
+    "Contigo hasta esperar es bonito",
+    "Eres hogar",
+    "Me has enseñado a confiar más en mi",
+    "Y por todo lo bonito que me haces sentir"
+  ],
+  deseo: "Pide un deseo",
+  cartaFinal: "Estoy muy agradecido con Dios y contigo, por la oportunidad de ya tener 3 años de conocerte, poder compartir y de estar junto a ti. Te amooooooo Honey Bunny"
+};
+/* ================================================================ */
+
+function Luciernagas() {
+  const items = useMemo(() => Array.from({ length: 22 }, (_, i) => ({
+    id: i, left: Math.random() * 100, size: 10 + Math.random() * 18,
+    dur: 9 + Math.random() * 12, delay: -Math.random() * 20,
+    e: ["💗", "✨", "🌸", "💖", "·"][i % 5]
+  })), []);
+  return <div className="fx" aria-hidden="true">{items.map(o =>
+    <span key={o.id} style={{ left: o.left + "%", fontSize: o.size, animationDuration: o.dur + "s", animationDelay: o.delay + "s", color: "#ffd27a" }}>{o.e}</span>)}</div>;
+}
+
+function Escritura({ frases }) {
+  const [txt, setTxt] = useState("");
+  useEffect(() => {
+    let i = 0, f = 0, vivo = true, t;
+    const paso = () => {
+      if (!vivo) return;
+      const actual = frases[f];
+      if (i <= actual.length) { setTxt(actual.slice(0, i++)); t = setTimeout(paso, 55); }
+      else if (f < frases.length - 1) { t = setTimeout(() => { f++; i = 0; paso(); }, 1800); }
+    };
+    t = setTimeout(paso, 2200);
+    return () => { vivo = false; clearTimeout(t); };
+  }, []);
+  return <p aria-live="polite">{txt}<span style={{ opacity: .6 }}>|</span></p>;
+}
+
+function Contador({ desde }) {
+  const [ahora, setAhora] = useState(Date.now());
+  useEffect(() => { const t = setInterval(() => setAhora(Date.now()), 1000); return () => clearInterval(t); }, []);
+  const ini = new Date(desde), hoy = new Date(ahora);
+  let a = hoy.getFullYear() - ini.getFullYear(), m = hoy.getMonth() - ini.getMonth(), d = hoy.getDate() - ini.getDate();
+  if (d < 0) { m--; d += new Date(hoy.getFullYear(), hoy.getMonth(), 0).getDate(); }
+  if (m < 0) { a--; m += 12; }
+  const s = Math.floor((ahora - ini) / 1000);
+  const caja = [[a, "años"], [m, "meses"], [d, "días"], [Math.floor(s / 3600) % 24, "horas"], [Math.floor(s / 60) % 60, "min"], [s % 60, "seg"]];
+  return <div className="cuenta">{caja.map(([n, l]) => <div key={l}><b>{n}</b><small>{l}</small></div>)}</div>;
+}
+
+function Foto({ f, i, abrir }) {
+  const [ok, setOk] = useState(true);
+  const rot = [-4, 3, -2, 5, -5, 2][i % 6];
+  return (
+    <figure className="polaroid" style={{ "--r": rot + "deg" }} tabIndex={0} role="button"
+      onClick={() => abrir({ ...f, ok })} onKeyDown={e => e.key === "Enter" && abrir({ ...f, ok })}>
+      <div className="img">{ok ? <img src={f.src} alt={f.pie} loading="lazy" onError={() => setOk(false)} /> : "📷"}</div>
+      <p>{f.pie}</p>
+    </figure>
+  );
+}
+
+function Carta({ texto }) {
+  const [on, setOn] = useState(false);
+  return (
+    <button className={"carta" + (on ? " on" : "")} onClick={() => setOn(!on)} aria-label="Voltear tarjeta">
+      <div className="in"><div className="cara f">💌</div><div className="cara b">{texto}</div></div>
+    </button>
+  );
+}
+
+function lanzarConfeti() {
+  const c = document.createElement("canvas"); c.className = "confeti"; document.body.appendChild(c);
+  const x = c.getContext("2d"); c.width = innerWidth; c.height = innerHeight;
+  const col = ["#ff9bb3", "#ffd27a", "#f3e9ff", "#c77dff", "#ff6f91"];
+  const ps = Array.from({ length: 180 }, () => ({
+    x: c.width / 2, y: c.height * .6, vx: (Math.random() - .5) * 18, vy: -Math.random() * 18 - 4,
+    w: 6 + Math.random() * 6, h: 4 + Math.random() * 6, r: Math.random() * 6, vr: (Math.random() - .5) * .4,
+    c: col[Math.floor(Math.random() * col.length)]
+  }));
+  let n = 0;
+  (function f() {
+    x.clearRect(0, 0, c.width, c.height);
+    ps.forEach(p => { p.vy += .35; p.x += p.vx; p.y += p.vy; p.r += p.vr; x.save(); x.translate(p.x, p.y); x.rotate(p.r); x.fillStyle = p.c; x.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); x.restore(); });
+    if (++n < 260) requestAnimationFrame(f); else c.remove();
+  })();
+}
+
+function Final() {
+  const [apagada, setApagada] = useState(false);
+  const soplar = () => { if (!apagada) { setApagada(true); lanzarConfeti(); setTimeout(lanzarConfeti, 700); } };
+  return (
+    <section className="final" id="final">
+      {!apagada ? (
+        <>
+          <h2>{CONFIG.deseo}</h2>
+          <button className="pastel" onClick={soplar} aria-label="Soplar la vela">
+            <div className="llama"></div><div className="mecha"></div><div className="torta"></div>
+          </button>
+          <p style={{ opacity: .7 }}>Toca la vela para soplarla</p>
+        </>
+      ) : (
+        <div className="carta-final">
+          <h2>Feliz cumpleaños, {CONFIG.nombre} 🎂</h2>
+          <p>{CONFIG.cartaFinal}</p>
+          <p style={{ fontFamily: "var(--mano)", fontSize: "1.8rem", color: "var(--vela)", marginTop: "1.2rem" }}>— {CONFIG.firmaTuNombre}</p>
+        </div>
+      )}
+    </section>
+  );
+}
+
+function App() {
+  const [entro, setEntro] = useState(false);
+  const [suena, setSuena] = useState(false);
+  const [foto, setFoto] = useState(null);
+  const audio = useRef(null);
+
+  const entrar = () => {
+    setEntro(true);
+    audio.current.volume = .6;
+    audio.current.play().then(() => setSuena(true)).catch(() => {});
+  };
+  const alternar = () => {
+    const a = audio.current;
+    if (a.paused) { a.play(); setSuena(true); } else { a.pause(); setSuena(false); }
+  };
+
+  return (
+    <>
+      <audio ref={audio} src={CONFIG.cancion} loop preload="auto" />
+      <Luciernagas />
+
+      <div className={"intro" + (entro ? " fuera" : "")}>
+        <div className="sobre" aria-hidden="true">💌</div>
+        <h1 style={{ fontSize: "clamp(1.8rem,6vw,3rem)", fontStyle: "italic" }}>Hay algo para ti, {CONFIG.nombre}</h1>
+        <button className="btn" onClick={entrar}>Abrir</button>
+      </div>
+
+      {entro && <>
+        <header className="hero">
+          <h1 aria-label="Feliz cumple">
+            {"Feliz cumple".split("").map((ch, i) =>
+              <span key={i} className="l" style={{ animationDelay: (.3 + i * .09) + "s" }}>{ch === " " ? "\u00A0" : ch}</span>)}
+          </h1>
+          <Escritura frases={CONFIG.frases} />
+          <span className="flecha" aria-hidden="true">↓</span>
+        </header>
+
+        <section>
+          <h2>Cada segundo contigo</h2>
+          <Contador desde={CONFIG.fechaInicio} />
+        </section>
+
+        <section>
+          <h2>Nuestros momentos</h2>
+          <div className="fotos">{CONFIG.fotos.map((f, i) => <Foto key={i} f={f} i={i} abrir={setFoto} />)}</div>
+        </section>
+
+        <section>
+          <h2>Nuestra historia</h2>
+          <div className="linea">{CONFIG.momentos.map((m, i) =>
+            <div className="hito" key={i}><time>{m.fecha}</time><h3>{m.titulo}</h3><p>{m.texto}</p></div>)}
+          </div>
+        </section>
+
+        <section>
+          <h2>Por qué te quiero</h2>
+          <div className="razones">{CONFIG.razones.map((r, i) => <Carta key={i} texto={r} />)}</div>
+        </section>
+
+        <Final />
+
+        <button className={"musica" + (suena ? " suena" : "")} onClick={alternar} aria-label={suena ? "Pausar música" : "Reproducir música"}>
+          {suena ? "♪" : "▶"}
+        </button>
+      </>}
+
+      {foto && (
+        <div className="visor" onClick={() => setFoto(null)} role="dialog" aria-label="Foto ampliada">
+          {foto.ok ? <img src={foto.src} alt={foto.pie} /> : <div className="img">📷</div>}
+        </div>
+      )}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
