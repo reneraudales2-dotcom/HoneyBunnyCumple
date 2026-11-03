@@ -3,7 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Feliz cumpleaños Honey Bunny💗</title>
+<title>Hay algo para ti, Honey Bunny 💌</title>
+<meta name="description" content="Una sorpresa hecha con mucho cariño. Ábrela con calma y ponle volumen 🎶">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_LA">
+<meta property="og:title" content="Hay algo para ti, Honey Bunny 💌">
+<meta property="og:description" content="Una sorpresa hecha con mucho cariño. Ábrela con calma y ponle volumen 🎶">
+<meta property="og:url" content="https://reneraudales2-dotcom.github.io/HoneyBunnyCumple/">
+<meta property="og:image" content="https://reneraudales2-dotcom.github.io/HoneyBunnyCumple/fotos/preview.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#1b1030">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,600&family=Caveat:wght@500&display=swap" rel="stylesheet">
@@ -60,6 +71,11 @@ button{font:inherit;cursor:pointer}
 .visor .img{width:min(92vw,420px);aspect-ratio:1;background:linear-gradient(135deg,var(--petalo),var(--rosa));display:grid;place-items:center;font-size:5rem}
 @keyframes aparece{from{opacity:0}to{opacity:1}}
 
+/* bloqueo */
+.cerrado{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.6rem;text-align:center;padding:2rem 1.25rem;position:relative;z-index:2}
+.cerrado .candado{font-size:4rem;animation:late 2.4s ease-in-out infinite}
+.cerrado h1{font-size:clamp(2rem,7vw,3.6rem);font-style:italic}
+.cerrado .cuenta{width:min(560px,100%)}
 /* carrusel */
 .carrusel{position:relative;height:min(500px,112vw);perspective:1200px;outline-offset:8px;touch-action:pan-y;user-select:none}
 .sl{position:absolute;left:50%;top:0;width:min(300px,66vw);height:calc(100% - 1rem);background:#fff8f2;padding:.6rem .6rem 3rem;border-radius:4px;box-shadow:0 18px 40px rgba(0,0,0,.55);transition:transform .7s cubic-bezier(.2,.8,.2,1),opacity .7s;cursor:pointer}
@@ -138,6 +154,12 @@ const CONFIG = {
     { src: "fotos/3.jpg", pie: "La primera navidad juntos" },
     { src: "fotos/4.jpg", pie: "Cuando teníamos 1 mes de salir" }
   ],
+  bloqueo: {                            // la página queda cerrada hasta esta fecha
+    activo: true,
+    fecha: "2026-11-05T00:00:00-06:00", // ⚠️ CAMBIA al cumpleaños real (-06:00 = hora de Honduras)
+    titulo: "Todavía no, mi amor…",
+    texto: "Tu sorpresa se abre cuando empiece tu día."
+  },
   carrusel: {                           // se llena solo con fotos/5.jpg, 6.jpg, 7.jpg...
     carpeta: "fotos",
     desde: 5,                           // primera foto del carrusel
@@ -383,11 +405,39 @@ function Final() {
   );
 }
 
+function Bloqueo({ fecha }) {
+  const [ahora, setAhora] = useState(Date.now());
+  useEffect(() => { const t = setInterval(() => setAhora(Date.now()), 1000); return () => clearInterval(t); }, []);
+  const s = Math.max(0, Math.floor((fecha - ahora) / 1000));
+  const caja = [[Math.floor(s / 86400), "días"], [Math.floor(s / 3600) % 24, "horas"], [Math.floor(s / 60) % 60, "min"], [s % 60, "seg"]];
+  const dia = new Date(fecha).toLocaleDateString("es", { day: "numeric", month: "long" });
+  return (
+    <main className="cerrado">
+      <div className="candado" aria-hidden="true">🔒</div>
+      <h1>{CONFIG.bloqueo.titulo}</h1>
+      <p>{CONFIG.bloqueo.texto}</p>
+      <div className="cuenta" role="timer" aria-label="Cuenta regresiva">{caja.map(([n, l]) => <div key={l}><b>{n}</b><small>{l}</small></div>)}</div>
+      <p style={{ fontFamily: "var(--mano)", fontSize: "1.6rem", color: "var(--vela)" }}>Vuelve el {dia} 💗</p>
+    </main>
+  );
+}
+
 function App() {
   const [entro, setEntro] = useState(false);
   const [suena, setSuena] = useState(false);
   const [foto, setFoto] = useState(null);
   const audio = useRef(null);
+
+  const fechaAbre = useMemo(() => new Date(CONFIG.bloqueo.fecha).getTime(), []);
+  const probando = /[?&]probar/.test(location.search);   // index.html?probar salta el bloqueo
+  const [cerrado, setCerrado] = useState(() => CONFIG.bloqueo.activo && !probando && Date.now() < fechaAbre);
+  useEffect(() => {
+    if (!cerrado) return;
+    const t = setInterval(() => {
+      if (Date.now() >= fechaAbre) { setCerrado(false); setTimeout(lanzarConfeti, 300); }
+    }, 1000);
+    return () => clearInterval(t);
+  }, [cerrado]);
 
   const entrar = () => {
     setEntro(true);
@@ -398,6 +448,8 @@ function App() {
     const a = audio.current;
     if (a.paused) { a.play(); setSuena(true); } else { a.pause(); setSuena(false); }
   };
+
+  if (cerrado) return <><Luciernagas /><Bloqueo fecha={fechaAbre} /></>;
 
   return (
     <>
